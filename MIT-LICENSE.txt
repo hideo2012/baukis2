@@ -1,0 +1,5 @@
+Copyright(c)2019 Tsutomu Kuroda
+
+Permission is hereby granted, free or charge, to any person obitaining
+a copy of this software and associated documentaion fils(the "software"), to deal in the Software without ristriction, including without limitation rigts to use, copy, modify, merge, publish, disribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the follwing conditions:
+

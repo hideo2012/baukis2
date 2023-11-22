@@ -9,5 +9,6 @@
   <td><%= event.description %></td>
   <td class="date">
     <%= event.occurred_at.strftime( "%Y/%m/%d %H:%M:%S" ) %>
+    <%= datetime_view event.occurred_at %>
   </td>
 </tr>

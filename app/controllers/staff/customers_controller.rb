@@ -19,7 +19,8 @@ class Staff::CustomersController < Staff::Base
   def create
     @customer_form = Staff::CustomerForm.new
     @customer_form.assign_attributes( params[:form] )
-    if @customer_form.save
+    #if @customer_form.save
+    if @customer_form.customer.save
       flash.notice = "顧客情報を追加しました。"
       redirect_to action: "index"
     else
@@ -31,7 +32,7 @@ class Staff::CustomersController < Staff::Base
   def update
     @customer_form = Staff::CustomerForm.new( Customer.find( params[:id] ))
     @customer_form.assign_attributes( params[:form] )
-    if @customer_form.save
+    if @customer_form.customer.save
       flash.notice = "顧客情報を更新しました。"
       redirect_to action: "index"
     else

@@ -27,5 +27,27 @@ class Address < ApplicationRecord
   validates :prefecture, inclusion: { 
     in: PREFECTURE_NAMES , allow_blank: true }
 
+  def postal_code_view
+    if md = postal_code.match( /\A(\d{3})(\d{4})\z/ )
+      md[1] + "-" + md[2]
+    else
+      postal_code
+    end
+  end
 
+  def phones_array
+    self.phones.map(&:number)
+  end
+
+  def set_from_form( _params, _inputs_address )
+    if _inputs_address
+      # strong_params method is subclass(home or work)
+      self.assign_attributes( strong_params( _params ) )
+    else
+      self.phones do | phone |
+        phone.mark_for_destruction
+      end
+      self.mark_for_destruction
+    end
+  end
 end

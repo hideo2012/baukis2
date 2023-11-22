@@ -38,7 +38,7 @@
     <tr>
       <th>入社日</th>
       <td class="date">
-        <%= @staff_member.start_date.strftime("%Y/%m/%d") %>
+        <%= date_view @staff_member.start_date %>
       </td>
     </tr>
   </table>

@@ -17,16 +17,28 @@
 
   <table class="listing">
     <tr>
-      <% unless @staff_member %>
-        <th> 氏名 </th>
-      <% end %>
+      <% unless @staff_member %><th> 氏名 </th><% end %>
       <th> 種別 </th>
       <th> 日時 </th>
     </tr>
 
     <!-- render partial: "event", collection: @events -->
     <% @events.each do |event| %>
-      <%= StaffEventPresenter.new( event, self ).table_row %>
+      <!-- #StaffEventPresenter.new( event, self ).table_row -->
+      <%= markup( :tr ) do |m|
+            unless instance_variable_get( :@staff_member )
+              m.td do
+                m << link_to( event.member.full_name,
+                  [ :admin, event.member, :staff_events ] )
+              end
+            end
+            m.td event.description
+            m.td( :class => "date" ) do
+              #m.text event.occurred_at.strftime( "%Y/%m/%d %H:%M:%S" )
+              m.text datetime_view( event.occurred_at )
+            end
+          end
+      %>
     <% end %>
 
     <% if @events.empty? %>
@@ -43,3 +55,4 @@
     <%= link_to "職員一覧", :admin_staff_members %>
   </div>
 </div>
+

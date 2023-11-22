@@ -18,13 +18,13 @@
       <th>アクション</th>
     </tr>
     <% @customers.each do |c| %>
-      <% p = CustomerPresenter.new( c, self ) %>
+      <% #p = CustomerPresenter.new( c, self ) %>
       <tr>
-        <td><%= p.full_name %></td>
-        <td><%= p.full_name_kana %></td>
-        <td><%= p.email %></td>
-        <td class="date"><%= p.birthday %></td>
-        <td><%= p.gender %></td>
+        <td><%= c.full_name %></td>
+        <td><%= c.full_name_kana %></td>
+        <td><%= c.email %></td>
+        <td class="date"><%= date_view( c.birthday ) %></td>
+        <td><%= c.gender_desc %></td>
         <td class="actions">
           <%= link_to " 詳細 ", [ :staff, c ] %> |
           <%= link_to " 編集 ", [ :edit, :staff, c ] %> |

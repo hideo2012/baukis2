@@ -16,4 +16,11 @@ class Phone < ApplicationRecord
   validates :number, presence: true,
     format: { with: /\A\+?\d+(-\d+)*\z/, allow_blank: true }
 
+  def set_from_form( phone_form )
+    if phone_form && phone_form[:number].present?
+      self.assign_attributes( phone_form )
+    else
+      self.mark_for_destruction
+    end
+  end
 end

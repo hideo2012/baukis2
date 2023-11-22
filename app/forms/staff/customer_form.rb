@@ -6,11 +6,37 @@ class Staff::CustomerForm
     :inputs_work_address
 
   #delegate :persisted?, to: :customer
-  delegate :persisted?, :save,  to: :customer
+  #delegate :persisted?, :save,  to: :customer
+  #delegate  :save,  to: :customer
+  
+  # judge  for view ( form_with from judge post or patch  )
+  # same delegate ,,,, but hate delegate
+  # over all , form_with .... method=xxxx 
+  def persisted?
+    @customer.persisted?
+  end
+  
+  def initialize( _customer = nil )
+    @customer = _customer
+    @customer ||= Customer.new
 
-  def initialize( customer = nil )
+    # inner address exist flag
+    self.inputs_home_address =  @customer.home_address.present?
+    self.inputs_work_address =  @customer.work_address.present?
+
+    # build inner object (address and phone)  if  not exist
+    self.customer.initialize_for_form
+  end
+
+  def assign_attributes( params = {} )
+    self.customer.set_from_form( params ) 
+  end
+
+  ####  delete  under lines ######
+  def initialize_old( customer = nil )
     @customer = customer
-    @customer ||= Customer.new( gender: "male" )
+    #@customer ||= Customer.new( gender: "male" )
+    @customer ||= Customer.new
     ( 2 - @customer.personal_phones.size ).times do
       @customer.personal_phones.build
     end
@@ -23,7 +49,7 @@ class Staff::CustomerForm
     end
   end
 
-  def assign_attributes( params = {} )
+  def assign_attributes_old( params = {} )
     @params = params
     self.inputs_home_address = params[:inputs_home_address] == "1"
     self.inputs_work_address = params[:inputs_work_address] == "1"

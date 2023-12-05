@@ -9,18 +9,19 @@ class Phone < ApplicationRecord
     self.number_for_index = number.gsub( /\D/, "" ) if number
   end
 
+  validates :number, presence: true,
+    format: { with: /\A\+?\d+(-\d+)*\z/, allow_blank: true }
+
   before_create do
     self.customer = address.customer if address
   end
 
-  validates :number, presence: true,
-    format: { with: /\A\+?\d+(-\d+)*\z/, allow_blank: true }
-
-  def set_from_form( phone_form )
-    if phone_form && phone_form[:number].present?
-      self.assign_attributes( phone_form )
+  def assign_nested_attributes( _params )
+    if _params[:number].present?
+      assign_attributes( _params )
     else
-      self.mark_for_destruction
+      mark_for_destruction
     end
   end
+
 end

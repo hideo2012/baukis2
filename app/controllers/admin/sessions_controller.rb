@@ -1,6 +1,7 @@
 class Admin::SessionsController < Admin::Base
-  skip_before_action :authorize
-
+  #skip_before_action :authorize
+  #before_action :admin_check
+  
   def new
     if current_administrator
       redirect_to :admin_root
@@ -12,12 +13,12 @@ class Admin::SessionsController < Admin::Base
 
   def create
     #@form = Admin::LoginForm.new( params[:admin_login_form] )
-    @form = Admin::LoginForm.new( login_form_params )
+    @form = Admin::LoginForm.new( strong_params )
     if @form.email.present?
       administrator =
         Administrator.find_by( "LOWER(email) = ?", @form.email.downcase )
     end
-    if Admin::Authenticator.new(administrator).authenticate(@form.password)
+    if administrator.authenticate(@form.password)
       if administrator.suspended?
         flash.now.alert = "アカウントが停止されています。"
         render action: "new"
@@ -33,8 +34,8 @@ class Admin::SessionsController < Admin::Base
     end
   end
 
-  private def login_form_params
-    params.require( :admin_login_form ).permit( :email, :password )
+  private def strong_params
+    params.require( :form ).permit( :email, :password )
   end
 
   def destroy

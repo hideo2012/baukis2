@@ -1,5 +1,6 @@
 class Admin::TopController < Admin::Base
-  skip_before_action :authorize
+  #skip_before_action :authorize
+  #before_action :admin_check
 
   def index
     #render action: "index"

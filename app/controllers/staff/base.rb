@@ -1,7 +1,7 @@
 class Staff::Base < ApplicationController
-  before_action :authorize
-  before_action :check_account
-  before_action :check_timeout
+  #before_action :authorize
+  #before_action :check_account
+  #before_action :check_timeout
   
   private def current_staff_member
     if session[:staff_member_id]
@@ -11,6 +11,12 @@ class Staff::Base < ApplicationController
   end
 
   helper_method :current_staff_member
+
+  def staff_member_check
+    authorize
+    check_account
+    check_timeout
+  end
 
   private def authorize
     unless current_staff_member

@@ -2,9 +2,8 @@
 <h1><%= @title %></h1>
 
 <div id="generic-form">
-  <%= form_with model: @customer_form, scope: "form",
-    method: :post, 
-    url: :staff_customers do |f| %>
+  <%#  form_with model: @customer, url: :staff_customers do |f| %>    
+  <%=  form_with model: @customer, url: [:staff, @customer] do |f| %>    
     <%= render "form", f: f %>
     <div class="buttons">
       <%= f.submit "登録" %>

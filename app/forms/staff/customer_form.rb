@@ -21,11 +21,13 @@ class Staff::CustomerForm
     @customer ||= Customer.new
 
     # inner address exist flag
-    self.inputs_home_address =  @customer.home_address.present?
-    self.inputs_work_address =  @customer.work_address.present?
+    #self.inputs_home_address =  @customer.home_address.present?
+    #self.inputs_work_address =  @customer.work_address.present?
+    self.inputs_home_address =  @customer.inputs_home_address
+    self.inputs_work_address =  @customer.inputs_work_address
 
     # build inner object (address and phone)  if  not exist
-    self.customer.initialize_for_form
+    #self.customer.initialize_for_form
   end
 
   def assign_attributes( params = {} )

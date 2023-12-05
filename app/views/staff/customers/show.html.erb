@@ -40,8 +40,8 @@
       <td><%= @customer.personal_phones_array[1] %></td>
     </tr>
 
-    <% if home = @customer.home_address %>
-      <% #p2 = AddressPresenter.new( home. self ) %>
+    <% if @customer.inputs_home_address == "1" %>
+      <% home = @customer.home_address %>
       <tr>
         <th colspan="2">自宅住所</th>
       </tr>
@@ -75,8 +75,8 @@
       </tr>
     <% end %>
 
-    <% if work = @customer.work_address %>
-      <% #p3 = AddressPresenter.new( work. self ) %>
+    <% if @customer.inputs_work_address == "1" %>
+      <% work = @customer.work_address %>
       <tr>
         <th colspan="2">勤務先</th>
       </tr>

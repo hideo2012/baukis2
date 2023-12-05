@@ -1,7 +1,7 @@
 class Admin::Base < ApplicationController
-  before_action :authorize
-  before_action :check_account
-  before_action :check_timeout
+  #before_action :authorize
+  #before_action :check_account
+  #before_action :check_timeout
 
   private def current_administrator
     if session[:administrator_id]
@@ -11,6 +11,12 @@ class Admin::Base < ApplicationController
   end
 
   helper_method :current_administrator
+
+  def admin_check
+    authorize
+    check_account
+    check_timeout
+  end
 
   private def authorize
     unless current_administrator
@@ -42,4 +48,3 @@ class Admin::Base < ApplicationController
   end
 
 end
-

@@ -1,4 +1,6 @@
 class Admin::StaffEventsController < Admin::Base
+  before_action :admin_check
+
   def index
     if params[:staff_member_id]
       @staff_member = StaffMember.find(params[:staff_member_id]) 

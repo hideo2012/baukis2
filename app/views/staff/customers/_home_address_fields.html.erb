@@ -1,3 +1,4 @@
+<% if false %><!--// skip //--!>
 <%= f.fields_for :home_address, f.object.customer.home_address do |ff| %>
   <%= markup do |m|
     p = FormPresenter.new( ff, self )
@@ -19,3 +20,31 @@
     end
   end %>
 <% end %>
+<% end %><!--// end if //--!>
+<% if true %><!--// temp //--!>
+
+<%= f.fields_for :home_address, f.home_address do |ff| %>
+  <% p = FormPresenter.new( ff, self ) %>
+  <%= p.postal_code_block :postal_code, "郵便番号", size: 7, required: true %>
+  <%= p.drop_down_list_block :prefecture, "都道府県", 
+    Address::PREFECTURE_NAMES %> 
+  <%= p.text_field_block :city, "市区町村", size: 16 %>
+  <%= p.text_field_block :address1, "町域、番地等", size: 40 %>
+  <%= p.text_field_block :address2, "建物名、部屋番号等", size: 40 %>
+  <div class="input-block">
+    <%= p.decorated_label :phones, "電話番号" %>
+    <ol>
+      <% p.phones.each do |phone| %>
+        <%= ff.fields_for :phones, phone do |fff| %>
+          <li>
+            <% fff.text_field :number %>
+            <% fff.check_box :primary %>
+            <% fff.label :primary, "優先" %>
+          </li>
+        <% end %>
+      <% end %>
+    </ol>
+  </div>
+<% end %>
+
+<% end %><!--// end if //--!>

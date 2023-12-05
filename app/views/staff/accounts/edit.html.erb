@@ -2,8 +2,21 @@
 <h1><%= @title %></h1>
 
 <div id="generic-form">
-  <%= form_with model: @staff_member, url: :staff_account do |f| %>
-    <%= render "form", f: f %>
+  <%= form_with model: @staff_member, scope: "form",
+    url: :staff_account do |f| %>
+    <%  p = FormPresenter.new( f, self ) %>
+
+    <div class="notes">
+      <span class="mark">*</span>印の付いた項目は入力必須です。
+    </div>
+
+    <%= p.text_field_block :email, "メールアドレス",
+      size: 32, required: true %>
+    <%= p.full_name_block  :family_name, :given_name, "氏名", 
+      required: true %>
+    <%= p.full_name_block  :family_name_kana, :given_name_kana, "フリガナ", 
+      required: true %>
+
     <div class="buttons">
       <%= f.submit "更新" %>
       <%= link_to "キャンセル", :staff_account %>

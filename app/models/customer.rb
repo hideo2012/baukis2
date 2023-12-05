@@ -1,5 +1,6 @@
 class Customer < ApplicationRecord
   attribute :gender, default: 'female'
+  attr_accessor :inputs_home_address, :inputs_work_address
 
   include EmailHolder
   include PersonalNameHolder
@@ -14,11 +15,23 @@ class Customer < ApplicationRecord
 
   validates :gender, inclusion: { 
     in: %w(male female), allow_blank: true }
+
   validates :birthday, date: {
     after: Date.new(1900,1,1),
     before: ->(obj) { Date.today },
     allow_blank: true
   }
+
+  after_initialize do 
+    self.inputs_home_address = home_address.present? ? "1" : "0"
+    self.inputs_work_address = work_address.present? ? "1" : "0"
+    build_home_address unless home_address.present?
+    build_work_address unless work_address.present?
+    ( 2 - personal_phones.size ).times do
+      personal_phones.build
+    end
+  end
+
 
   def full_name
     family_name + " " + given_name
@@ -48,63 +61,20 @@ class Customer < ApplicationRecord
     personal_phones.map(&:number)
   end
 
-  def initialize_for_form
-    # build empty address
-    self.build_home_address unless self.home_address.present?
-    self.build_work_address unless self.work_address.present?
+  def assign_nested_attributes( _params )
+    p ">> nested params:>>#{_params}"
+    assign_attributes(
+      _params.except(:phones, :home, :work )) 
 
-    # build personal phone max 2
-    ( 2 - self.personal_phones.size ).times do
-      self.personal_phones.build
+    personal_phones.size.times do |i|
+      personal_phones[i].assign_nested_attributes( _params[:phones][i.to_s] )
     end
 
-    # build address phone max 2
-    ( 2 - self.home_address.phones.size ).times do
-      self.home_address.phones.build
-    end
-    ( 2 - self.work_address.phones.size ).times do
-      self.work_address.phones.build
-    end
-  end
-  
-  def set_from_form( _params )
-    self.assign_attributes( strong_param_customer( _params ) )
-    set_phones( _params, :customer, self.personal_phones )
+    self.home_address.inputs = ( _params[:inputs_home_address] == "1" )
+    home_address.assign_nested_attributes( _params[:home] )
 
-    if _params[:inputs_home_address] == "1"
-      self.home_address.set_from_form( _params, true ) 
-      set_phones( _params, :home_address, self.home_address.phones )
-    else
-      self.home_address.set_from_form( _params, false ) 
-    end
-
-    if _params[:inputs_work_address] == "1"
-      self.work_address.set_from_form( _params, true ) 
-      set_phones( _params, :work_address, self.work_address.phones )
-    else
-      self.work_address.set_from_form( _params, false ) 
-    end
-
+    self.work_address.inputs = ( _params[:inputs_work_address] == "1" )
+    work_address.assign_nested_attributes( _params[:work] )
   end
 
-  private def strong_param_customer( params )
-      params.require( :customer ).except(:phones).permit(
-        :email, :password,
-        :family_name, :given_name, 
-        :family_name_kana, :given_name_kana, 
-        :birthday, :gender,
-      )
-  end
-
-  private def set_phones( _params, _parent_name, _phones_obj )
-    phones_form = 
-      _params.require( _parent_name )
-      .slice( :phones ).permit(
-        phones: [ :number, :primary ]
-      ).fetch(:phones)
-
-    _phones_obj.size.times do |i|
-      _phones_obj[i].set_from_form( phones_form[ i.to_s ] )
-    end
-  end
 end

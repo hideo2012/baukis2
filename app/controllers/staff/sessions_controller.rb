@@ -1,5 +1,5 @@
 class Staff::SessionsController < Staff::Base
-  skip_before_action :authorize
+  #skip_before_action :authorize
 
   def new
     if current_staff_member
@@ -16,8 +16,8 @@ class Staff::SessionsController < Staff::Base
       staff_member = 
         StaffMember.find_by( "LOWER(email) = ?", @form.email.downcase )
     end
-
-    if Staff::Authenticator.new(staff_member).authenticate(@form.password)
+    
+    if staff_member && staff_member.authenticate( @form.password )
       if staff_member.suspended?
         # StaffEvent.create!( member: staff_member, type: "rejected" ) でもOK？ 
         staff_member.events.create!( type: "rejected" )

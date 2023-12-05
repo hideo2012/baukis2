@@ -1,4 +1,5 @@
 class Admin::StaffMembersController < Admin::Base
+  before_action :admin_check
 
   def index
     @staff_members = StaffMember.order(:family_name_kana, :given_name_kana)

@@ -2,8 +2,12 @@ class Staff::CustomersController < Staff::Base
   before_action :staff_member_check
 
   def index
-    @customers = Customer.order( :family_name_kana, :given_name_kana )
-      .page( params[:page])
+    #@serch_form = Staff::CustomerForm.new
+    #@customers = Customer.order( :family_name_kana, :given_name_kana )
+    #  .page( params[:page])
+    
+    @search_form = Staff::CustomerSearchForm.new( search_strong_params )
+    @customers = @search_form.search.page( params[:page] )
   end
 
   def show
@@ -50,7 +54,6 @@ class Staff::CustomersController < Staff::Base
   end
 
   private def strong_params
-    #p ">> cntroler params:>>#{params}<<"
     params.require(:customer).permit(
       :email, :password,
       :family_name, :given_name, 
@@ -73,6 +76,15 @@ class Staff::CustomersController < Staff::Base
         phones: [ :number, :primary ],
       ] 
     )
+  end
+
+  private def search_strong_params
+    params[:search]&.permit([
+      :family_name_kana, :given_name_kana,
+      :birth_year, :birth_month, :birth_mday,
+      :address_type, :prefecture, :city, :phone_number,
+      :gender, :postal_code
+    ])
   end
 
 end

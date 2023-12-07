@@ -22,6 +22,11 @@ module StringNormalizer extend ActiveSupport::Concern
   def normalize_as_phone_number( text )
     NKF.nkf( "-W -w -Z1", text ).strip if text
   end
+
+  def normalize_as_phone_number_no_hyphen( text )
+    NKF.nkf( "-W -w -Z1", text ).strip.gsub(/\D/, "") if text
+  end
+
 end
 
 

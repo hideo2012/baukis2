@@ -1,4 +1,14 @@
 <header>
-  <span class="logo-mark">BAUKIS2</span>
-</header>
+  <%= link_to "BAUKIS2", :customer_root, class: "logo-mark" %>
+  <%= content_tag(:span, flash.notice, class:"notice") if flash.notice %>
+  <%= content_tag(:span, flash.alert, class:"alert") if flash.alert %>
 
+  <%=
+    if current_customer
+      link_to "ログアウト", :customer_session, method: :delete, 
+        class: "link-login-or-logout"
+    else
+      link_to "ログイン", :customer_login, class: "link-login-or-logout"
+    end
+  %>
+</header>

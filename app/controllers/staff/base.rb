@@ -1,4 +1,5 @@
 class Staff::Base < ApplicationController
+  before_action :check_source_ip_address
   #before_action :authorize
   #before_action :check_account
   #before_action :check_timeout
@@ -12,10 +13,16 @@ class Staff::Base < ApplicationController
 
   helper_method :current_staff_member
 
+
   def staff_member_check
+    #check_source_ip_address
     authorize
     check_account
     check_timeout
+  end
+
+  private def check_source_ip_address
+    raise IpAddressRejected unless AllowedSource.include?("staff", request.ip)
   end
 
   private def authorize

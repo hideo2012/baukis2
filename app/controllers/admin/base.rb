@@ -1,4 +1,6 @@
 class Admin::Base < ApplicationController
+
+  before_action :check_source_ip_address 
   #before_action :authorize
   #before_action :check_account
   #before_action :check_timeout
@@ -16,6 +18,10 @@ class Admin::Base < ApplicationController
     authorize
     check_account
     check_timeout
+  end
+
+  private def check_source_ip_address
+    raise IpAddressRejected unless AllowedSource.include?("admin", request.ip)
   end
 
   private def authorize

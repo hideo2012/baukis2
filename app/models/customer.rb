@@ -9,11 +9,14 @@ class Customer < ApplicationRecord
   has_many :addresses, dependent: :destroy
   has_one :home_address, autosave: true
   has_one :work_address, autosave: true
-
   has_many :phones,      dependent: :destroy
   has_many :personal_phones, 
     ->{ where( address_id: nil ).order( :id ) },
     class_name: "Phone", autosave: true
+  has_many :entries, dependent: :destroy
+  has_many :programs, through: :entries # , source: program (省略可能)
+
+
 
   validates :gender, inclusion: { 
     in: %w(male female), allow_blank: true }
@@ -29,16 +32,6 @@ class Customer < ApplicationRecord
       self.birth_year = birthday.year
       self.birth_month = birthday.month
       self.birth_mday = birthday.mday
-    end
-  end
-
-  after_initialize do 
-    self.inputs_home_address = home_address.present? ? "1" : "0"
-    self.inputs_work_address = work_address.present? ? "1" : "0"
-    build_home_address unless home_address.present?
-    build_work_address unless work_address.present?
-    ( 2 - personal_phones.size ).times do
-      personal_phones.build
     end
   end
 
@@ -85,20 +78,31 @@ class Customer < ApplicationRecord
     personal_phones.map(&:number)
   end
 
-  def assign_nested_attributes( _params )
-    p ">> nested params:>>#{_params}"
-    assign_attributes(
-      _params.except(:phones, :home, :work )) 
+  def build_empty_address_and_phones
+    self.inputs_home_address = home_address.present? ? "1" : "0"
+    self.inputs_work_address = work_address.present? ? "1" : "0"
+    build_home_address unless home_address.present?
+    build_work_address unless work_address.present?
+    build_empty_phones( personal_phones )
+    build_empty_phones( home_address.phones )
+    build_empty_phones( work_address.phones )
+  end
+   
+  private def build_empty_phones( _phones )
+    ( 2 - _phones.size ).times do
+      _phones.build
+    end
+  end
 
+  def assign_nested_attributes( _params )
+    build_empty_address_and_phones
+    assign_attributes( _params.except(:phones, :home, :work ) ) 
     personal_phones.size.times do |i|
       personal_phones[i].assign_nested_attributes( _params[:phones][i.to_s] )
     end
-
     self.home_address.inputs = ( _params[:inputs_home_address] == "1" )
     home_address.assign_nested_attributes( _params[:home] )
-
     self.work_address.inputs = ( _params[:inputs_work_address] == "1" )
     work_address.assign_nested_attributes( _params[:work] )
   end
-
 end

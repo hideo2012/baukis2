@@ -30,12 +30,6 @@ class Address < ApplicationRecord
     self.address2 = normalize_as_name( address2 )
   end
 
-  after_initialize do
-    ( 2 - phones.size ).times do
-      phones.build
-    end
-  end
-
   def postal_code_view
     if md = postal_code.match( /\A(\d{3})(\d{4})\z/ )
       md[1] + "-" + md[2]

@@ -1,0 +1,19 @@
+<% p = FormPresenter.new( f, self ) %>
+
+<div class="notes">
+  <span class="mark">*</span>印の付いた項目は入力必須です。
+</div>
+
+<%= p.text_field_block :title, "タイトル", maxlength: 32, required: true  %>
+<%= p.datetime_field_block :application_start, "申込み開始日", required: true, instruction: "現在から1年後まで" %>
+<%= p.datetime_field_block :application_end, "申込み終了日", required: true, instruction: "開始日時から90日後まで" %>
+<%= p.number_field_block :min_number_of_participants, "最小参加者数", size: 6, max: 1000 %>
+<%= p.number_field_block :max_number_of_participants, "最大参加者数", size: 6, max: 1000 %>
+
+<div class="input-block">
+  <%= p.decorated_label :description, "詳細", required: true %>
+  <%= p.text_area :description, rows: 6, style: "width: 454px" %>
+  <span class="instruction" style="float: right">(800文字以内)</span>
+  <%= p.error_messages_for(:description) %>
+</div>
+

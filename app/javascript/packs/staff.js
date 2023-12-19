@@ -4,4 +4,5 @@ require("@rails/activestorage").start()
 require("channels")
 
 import "../staff/customer_form.js";
+import "../staff/entries_form.js";
 

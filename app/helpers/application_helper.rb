@@ -23,6 +23,9 @@ module ApplicationHelper
     date.try( :strftime, "%Y/%m/%d" )
   end
 
-
+  def delimiter_num( _number )
+    return "" unless _number
+    number_with_delimiter(_number)
+  end
 
 end

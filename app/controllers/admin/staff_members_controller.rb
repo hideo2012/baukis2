@@ -41,6 +41,17 @@ class Admin::StaffMembersController < Admin::Base
     end
   end
 
+  def destroy
+    staff_member = StaffMember.find( params[:id] )
+    if staff_member.deletable?
+      staff_member.destroy!
+      flash.notice = "職員アカウントを削除しました。"
+    else
+      flash.notice = "この職員アカウントは削除できません。"
+    end
+    redirect_to :admin_staff_members
+  end
+
   private def staff_members_params
     params.require(:staff_member).permit(
       :email, :password, 
@@ -51,10 +62,4 @@ class Admin::StaffMembersController < Admin::Base
     )
   end
 
-  def destroy
-    staff_member = StaffMember.find( params[:id] )
-    staff_member.destroy!
-    flash.notice = "職員アカウントを削除しました。"
-    redirect_to :admin_staff_members
-  end
 end

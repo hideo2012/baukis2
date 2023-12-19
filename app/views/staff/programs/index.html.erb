@@ -1,0 +1,47 @@
+<% @title = " プログラム管理" %>
+<h1><%= @title %></h1>
+
+<div class="table-wrapper">
+  <div class="links">
+    <%= link_to "新規登録", :new_staff_program %>
+  </div>
+
+  <%= paginate @programs %>
+
+  <table class="listing">
+    <tr>
+      <th>タイトル</th>
+      <th>申込み開始日時</th>
+      <th>申込み終了日時</th>
+      <th>最小参加者数</th>
+      <th>最大参加者数</th>
+      <th>申込み件数</th>
+      <th>登録職員</th>
+      <th>アクション</th>
+    </tr>
+    <% @programs.each do |p| %>
+      <tr>
+        <td><%= p.title  %></td>
+        <td class="date"><%= p.application_start_time_format  %></td>
+        <td class="date"><%= p.application_end_time_format  %></td>
+        <td class="numeric"><%= delimiter_num( p.min_number_of_participants ) %></td>
+        <td class="numeric"><%= delimiter_num( p.max_number_of_participants ) %></td>
+        <%# --- delimiter_num( p.number_of_applicants ) --- %>
+        <td class="numeric"><%= delimiter_num( p.number_of_applicants )%></td>
+        <td><%= p.registrant_name %></td>
+        <td class="actions">
+          <%= link_to "詳細", [ :staff, p ] %> | 
+          <%= link_to "編集", [ :edit, :staff, p ] %> | 
+          <%= link_to "削除", [ :staff, p ], method: :delete, 
+            data: { confirm: "本当に削除しますか？" } %>  
+        </td>
+      </tr>
+    <% end %><%# --- each --- %>
+  </table>
+
+  <%= paginate @programs %>
+
+  <div class="links">
+    <%= link_to "新規登録", :new_staff_program %>
+  </div>
+</div>

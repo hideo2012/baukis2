@@ -3,6 +3,8 @@ table_names = %w(
  administrators
  staff_events
  customers
+ programs
+ entries
 )
 
 table_names.each do |table_name| 

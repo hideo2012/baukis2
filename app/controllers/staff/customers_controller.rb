@@ -2,24 +2,23 @@ class Staff::CustomersController < Staff::Base
   before_action :staff_member_check
 
   def index
-    #@serch_form = Staff::CustomerForm.new
-    #@customers = Customer.order( :family_name_kana, :given_name_kana )
-    #  .page( params[:page])
-    
     @search_form = Staff::CustomerSearchForm.new( search_strong_params )
     @customers = @search_form.search.page( params[:page] )
   end
 
   def show
     @customer = Customer.find( params[:id] )
+    @customer.build_empty_address_and_phones
   end
 
   def new
     @customer = Customer.new
+    @customer.build_empty_address_and_phones
   end
 
   def edit
     @customer = Customer.find( params[:id] )
+    @customer.build_empty_address_and_phones
   end
 
   def create

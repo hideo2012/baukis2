@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_12_06_105921) do
+ActiveRecord::Schema.define(version: 2023_12_11_041818) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,18 @@ ActiveRecord::Schema.define(version: 2023_12_06_105921) do
     t.index "lower((email)::text)", name: "index_administrators_on_LOWER_email", unique: true
   end
 
+  create_table "allowed_sources", force: :cascade do |t|
+    t.string "namespace", null: false
+    t.integer "octet1", null: false
+    t.integer "octet2", null: false
+    t.integer "octet3", null: false
+    t.integer "octet4", null: false
+    t.boolean "wildcard", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["namespace", "octet1", "octet2", "octet3", "octet4"], name: "index_allowed_sources_on_namaspace_and_octets", unique: true
+  end
+
   create_table "customers", force: :cascade do |t|
     t.string "email", null: false
     t.string "family_name", null: false
@@ -73,6 +85,16 @@ ActiveRecord::Schema.define(version: 2023_12_06_105921) do
     t.index ["given_name_kana"], name: "index_customers_on_given_name_kana"
   end
 
+  create_table "entries", force: :cascade do |t|
+    t.bigint "program_id", null: false
+    t.bigint "customer_id", null: false
+    t.boolean "approved", default: false, null: false
+    t.boolean "canceled", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["customer_id"], name: "index_entries_on_customer_id"
+  end
+
   create_table "phones", force: :cascade do |t|
     t.bigint "customer_id", null: false
     t.bigint "address_id"
@@ -84,6 +106,18 @@ ActiveRecord::Schema.define(version: 2023_12_06_105921) do
     t.index ["address_id"], name: "index_phones_on_address_id"
     t.index ["customer_id"], name: "index_phones_on_customer_id"
     t.index ["number_for_index"], name: "index_phones_on_number_for_index"
+  end
+
+  create_table "programs", force: :cascade do |t|
+    t.integer "registrant_id", null: false
+    t.string "title", null: false
+    t.text "description", null: false
+    t.datetime "application_start_time", null: false
+    t.datetime "application_end_time", null: false
+    t.integer "min_number_of_participants"
+    t.integer "max_number_of_participants"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "staff_events", force: :cascade do |t|

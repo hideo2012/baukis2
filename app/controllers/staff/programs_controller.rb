@@ -45,10 +45,15 @@ class Staff::ProgramsController < Staff::Base
 
   def destroy
     @program = Program.find( params[:id] )
-    @program.destroy!
-    flash.notice = " プログラムを削除しました。 "
-    #redirect_to action: "index"
-    redirect_to :staff_programs
+    if @program.deletable?
+      @program.destroy!
+      flash.notice = " プログラムを削除しました。 "
+      #redirect_to action: "index"  TODO あれ？これでもいいじゃね？
+      redirect_to :staff_programs
+    else
+      flash.alert = " このプログラムは削除できません。 "
+      redirect_to action: "index"
+    end
   end
 
   private def strong_params

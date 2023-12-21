@@ -1,9 +1,14 @@
 <% 
 entries = @program.entries.includes(:customer).order("entries.id").to_a
-idx = 0
+entries_idx = 0
 cols = 4
-rows = entries.size / cols
-rows += 1 unless entries.size % cols == 0
+r = entries.size.divmod( cols )  # ruby 2.6
+rows = r[0]
+rows += 1 if r[1] > 0
+
+#  ruby 3.2 ~
+# rows = entries.size.ceildiv( cols )
+
 %>
 <table class="entries">
   <tr>
@@ -17,9 +22,9 @@ rows += 1 unless entries.size % cols == 0
   <% rows.times do %>
     <tr>
       <% cols.times do %>
-        <% e = entries[idx] || break %>
+        <% e = entries[ entries_idx ] || break %>
         <div class="entry">
-          <th><%= idx + 1 %></th>
+          <th><%= entries_idx + 1 %></th>
           <td><%= e.customer.full_name %></td>
           <td>
             <%= tag.input type: 'checkbox', class: "approved",
@@ -30,7 +35,7 @@ rows += 1 unless entries.size % cols == 0
                checked: e.canceled?, data: { entry_id: e.id } %>
           </td>
         </div>
-        <% idx += 1 %>
+        <% entries_idx += 1 %>
       <% end %>
     </tr>
   <% end %>
@@ -50,8 +55,4 @@ rows += 1 unless entries.size % cols == 0
           id: "update-entries-button" %>
   <% end %>
 </div>
-
-
-
-
 

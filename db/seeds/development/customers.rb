@@ -34,6 +34,7 @@ company_names = %w( OIAX ABC XYZ )
   10.times do |m|
     fn = family_names[n].split( ":" )
     gn = given_names[m].split( ":" )
+    birthday = 60.years.ago.advance( seconds: rand(40.years) ).to_date
     c = Customer.create!(
       email: "#{fn[2]}.#{gn[2]}@example.jp",
       family_name: fn[0],
@@ -41,7 +42,11 @@ company_names = %w( OIAX ABC XYZ )
       family_name_kana: fn[1],
       given_name_kana: gn[1],
       password: "password",
-      birthday: 60.years.ago.advance( seconds: rand(40.years) ).to_date,
+      #birthday: 60.years.ago.advance( seconds: rand(40.years) ).to_date,
+      birthday: birthday,
+      birth_year: birthday.year,
+      birth_month: birthday.month,
+      birth_mday: birthday.mday,
       gender: m < 5 ? "male" : "female"
     )
     if m % 2 == 0

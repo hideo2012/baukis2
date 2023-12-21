@@ -8,8 +8,8 @@ ja:
         application_start_date: 申込み開始日
         application_end_time: 申込み終了日時
         application_end_date: 申込み終了日
-        max_number_of_participants: 最小参加者数
-        min_number_of_participants: 最大参加者数
+        min_number_of_participants: 最小参加者数
+        max_number_of_participants: 最大参加者数
     errors:
       models:
         program:

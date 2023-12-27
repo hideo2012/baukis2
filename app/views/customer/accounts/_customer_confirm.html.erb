@@ -1,0 +1,27 @@
+<%# p = ConfirmPresenter.new( f, self) %>
+<% p = FormPresenter.new( f, self) %>
+
+<%= p.text_field_hidden :email, "メールアドレス", disabled: true  %>
+
+<%= p.full_name_hidden  :family_name, :given_name, "氏名" %>
+<%= p.full_name_hidden  :family_name_kana, :given_name_kana, "フリガナ" %>
+<%= p.text_field_hidden :birthday, "生年月日" %>
+<%= p.gender_field_hidden  %>
+<div>
+  <%=  p.decorated_label :personal_phones, "電話番号" %>
+  <ol>
+    <% p.object.personal_phones.each_with_index do |phone, index| %>
+      <%= f.fields_for :phones, phone, index: index do |ff| %>
+        <%= ff.hidden_field :number %>
+        <%= ff.hidden_field :primary %>
+        <li>
+          <span> 
+            <%= ff.object.number %>
+            <%= " (優先) " if ff.object.primary? %>
+          </span>
+        </li>
+      <% end %>
+    <% end %>
+  </ol>
+</div>
+

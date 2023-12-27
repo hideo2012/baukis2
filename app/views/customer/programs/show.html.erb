@@ -1,0 +1,50 @@
+<% @title = " プログラム詳細情報" %>
+<h1><%= @title %></h1>
+
+<div class="table-wrapper">
+    <% p = @program %>
+
+  <table class="attributes">
+    <tr>
+      <th>タイトル</th>
+      <td><%= p.title  %></td>
+    </tr>
+    <tr>
+      <th>申込み開始日時</th>
+      <td class="date"><%= p.application_start_time_format  %></td>
+    </tr>
+      <th>申込み終了日時</th>
+      <td class="date"><%= p.application_end_time_format  %></td>
+    <tr>
+    </tr>
+    <tr>
+      <th>最小参加者数</th>
+      <td class="numeric"><%= delimiter_num( p.min_number_of_participants ) %></td>
+    </tr>
+    <tr>
+      <th>最大参加者数</th>
+      <td class="numeric"><%= delimiter_num( p.max_number_of_participants ) %></td>
+    </tr>
+  </table>
+
+  <div class="description">
+    <%= p.description %>
+  </div>
+
+  <div>
+    <%= p.status( @entry ) %>
+    <% if !@entry %>
+      <%= button_to " 申し込む ", [ :customer, p, :entry ], 
+            method: :post,
+            data: { confirm: " 本当に申込みますか？ " }, 
+            disabled: !(p.apply_available?( @entry )) 
+      %>
+    <% elsif @entry.canceled == false %> 
+      <%= button_to " キャンセルする ", [ :cancel, :customer, p, :entry ], 
+        method: :patch,
+        data: { confirm: " 本当にキャンセルしますか？ " }, 
+        disabled: !(p.apply_cancelable?( @entry )) 
+      %> 
+    <% end %>
+  </div>
+</div>

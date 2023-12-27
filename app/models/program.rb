@@ -13,6 +13,11 @@ class Program < ApplicationRecord
       .includes(:registrant)
   }
 
+  scope :published, -> {
+    where( "application_start_time <= ?", Time.current )
+      .order(application_start_time: :desc)
+  }
+
   attribute :application_start_date, :date, default: Date.today
   attribute :application_start_hour, :integer, default: 9
   attribute :application_start_minute, :integer, default: 0
@@ -110,5 +115,54 @@ class Program < ApplicationRecord
       self.application_end_minute = application_end_time.min 
     end
   end
+
+
+  def full_participants?
+    return false unless max = max_number_of_participants
+    entries.where(canceled: false).count >= max
+  end
+
+  def closed_application?
+    Time.current >= application_end_time
+  end
+
+  def before_start?
+    Time.current < application_start_time
+  end
+
+  def find_entry( cid )
+    entries.find_by( customer_id: cid )
+  end
+
+  def applied?( cid )
+    entries.where( customer_id: cid ).exists?
+  end
+
+  def apply_available?( entry )
+    return false if closed_application?
+    return false if full_participants?
+    return true if !entry
+    false
+  end
+
+  def apply_cancelable?( entry )
+    return false if closed_application?
+    return true if entry && entry.canceled? == false
+    false
+  end
+
+  def status( entry )
+    if !entry
+      return " 募集終了 " if closed_application?
+      return " 募集上限満了 " if full_participants?
+      return " 募集中 "
+    elsif entry.canceled?
+      return " キャンセル済 "
+    else
+      return " 申込み済（キャンセル不可）"   if closed_application?
+      return " 申込み済 "
+    end
+  end
+
 
 end

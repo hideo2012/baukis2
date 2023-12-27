@@ -1,0 +1,35 @@
+
+    <ol>
+      <% p.object.phones.each_with_index do |phone, index| %>
+        <%= ff.fields_for :phones, phone, index: index do |fff| %>
+          <%= fff.hidden_field :number %>
+          <%= fff.hidden_field :primary %>
+          <li>
+            <span> 
+              <%= fff.object.number %>
+              <%= " (優先) " if fff.object.primary? %>
+            </span>
+          </li>
+        <% end %>
+      <% end %>
+    </ol>
+
+
+<%= f.fields_for :phones, phone, index: index do |ff| %>
+  <%= markup(:li) do |m|
+    m << ff.text_field( :number )
+    m << ff.check_box( :primary )
+    m << ff.label( :primary, "優先" )
+  end %>
+<% end %>
+
+
+    m.div( class: "input-block" ) do
+      m << p.decorated_label( :phones, "電話番号" )
+      m.ol do
+        p.object.phones.each_with_index do |phone, index|
+          m << render( "phone_fields", f: ff, phone: phone, index: index )
+        end
+      end
+    end
+

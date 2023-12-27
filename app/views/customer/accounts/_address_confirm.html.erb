@@ -1,0 +1,32 @@
+<%= f.fields_for kind_of, obj do |ff| %>
+  <% p = FormPresenter.new( ff, self) %>
+
+  <% if kind_of == :work %>
+    <%= p.text_field_hidden :company_name, "会社名" %>
+    <%= p.text_field_hidden :division_name, "部署名" %>
+  <% end %>
+
+  <%= p.text_field_hidden :postal_code, "郵便番号" %>
+  <%= p.text_field_hidden :prefecture, "都道府県" %> 
+  <%= p.text_field_hidden :city, "市区町村" %>
+  <%= p.text_field_hidden :address1, "町域、番地等" %>
+  <%= p.text_field_hidden :address2, "建物名、部屋番号等" %>
+
+  <div>
+    <%= p.decorated_label :phones, "電話番号" %>
+    <ol>
+      <% p.object.phones.each_with_index do |phone, index| %>
+        <%= ff.fields_for :phones, phone, index: index do |fff| %>
+          <%= fff.hidden_field :number %>
+          <%= fff.hidden_field :primary %>
+          <li>
+            <span> 
+              <%= fff.object.number %>
+              <%= " (優先) " if fff.object.primary? %>
+            </span>
+          </li>
+        <% end %>
+      <% end %>
+    </ol>
+  </div>
+<% end %>

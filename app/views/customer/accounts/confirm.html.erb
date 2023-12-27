@@ -1,0 +1,38 @@
+<% @title = "アカウントの更新（確認）" %>
+<h1><%= @title %></h1>
+
+<div id="generic-form" class="confirming" >
+  <p>以下の内容でアカウントを更新します。よろしいでうすか？</p>
+
+  <%=  form_with model: @customer, url: :customer_account do |f| %>    
+    <%#  p = ConfirmPresenter.new( f, self ) %>
+    <%  p = FormPresenter.new( f, self ) %>
+    <fieldset id="customer-fields">
+      <legend>基本情報</legend>
+      <%= render "customer_confirm", f: f %>
+    </fieldset>
+    <%= p.hidden_field( :inputs_home_address ) %>
+    <%= p.hidden_field( :inputs_work_address ) %>
+
+    <% if p.object.inputs_home_address == "1"%>
+      <fieldset id="home-address-fields">
+        <legend>自宅住所</legend>
+        <%= render "address_confirm", f: f, kind_of: :home, 
+                                          obj: f.object.home_address  %>
+      </fieldset>
+    <% end %>
+
+    <% if p.object.inputs_work_address == "1"%>
+      <fieldset id="work-address-fields">
+        <legend>勤務先</legend>
+        <%= render "address_confirm", f: f, kind_of: :work, 
+                                        obj: f.object.work_address  %>
+      </fieldset>
+    <% end %>
+
+    <div class="buttons">
+      <%= f.submit " 更新 "  %>
+      <%= f.submit " 訂正 ", name: "correct" %>
+    </div>
+  <% end %> <%# -- end of form_with -- %>
+</div>

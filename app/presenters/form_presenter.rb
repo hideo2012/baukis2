@@ -5,6 +5,7 @@ class FormPresenter
 
   delegate( 
       :label, 
+      :hidden_field, 
       :text_field, 
       :date_field, 
       :password_field, 
@@ -128,10 +129,6 @@ class FormPresenter
     end
   end
 
-  def decorated_label( name, label_text, options = {} )
-    label( name, label_text, class: options[:required] ? "required" : nil )
-  end
-
 #  def password_field_block(name, label_text, options = {} )
 #    if object.new_record?
 #      super(name, label_text, options)
@@ -174,6 +171,34 @@ class FormPresenter
     end
   end
 
+  def text_field_hidden( name, label_text, options = {} )
+    markup( :div ) do |m|
+      m << decorated_label( name, label_text )
+      m.div( object.send(name) )
+      unless options[:desabled]
+        m << hidden_field( name )
+      end
+    end
+  end
 
+  def full_name_hidden( name1, name2, label_text )
+    markup(:div ) do |m|
+      m << decorated_label( name1, label_text )
+      m.div( object.send(name1) + " " + object.send(name2)  )
+      m << hidden_field( name1 )
+      m << hidden_field( name2 )
+    end
+  end
 
+  def gender_field_hidden
+    markup( :div ) do |m|
+      m << decorated_label( :gender, "性別" )
+      m.div( object.gender_desc )
+      m << hidden_field( :gender )
+    end
+  end
+
+  def decorated_label( name, label_text, options = {} )
+    label( name, label_text, class: options[:required] ? "required" : nil )
+  end
 end

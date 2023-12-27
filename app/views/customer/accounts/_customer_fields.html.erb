@@ -1,0 +1,25 @@
+<% p = FormPresenter.new( f, self) %>
+
+<%= p.text_field_block :email, "メールアドレス", size: 32, disabled: true  %>
+<%# p.password_field_block :password, "パスワード", size: 32, disabled: true  %>
+
+<%= p.full_name_block  :family_name, :given_name, "氏名", required: true %>
+<%= p.full_name_block  :family_name_kana, :given_name_kana, "フリガナ", 
+  required: true %>
+<%= p.date_field_block :birthday, "生年月日" %>
+<%= p.gender_field_block  %>
+<div class="input-block">
+  <%=  p.decorated_label :personal_phones, "電話番号" %>
+  <ol>
+    <% p.object.personal_phones.each_with_index do |phone, index| %>
+      <%= f.fields_for :phones, phone, index: index do |ff| %>
+        <li>
+          <%= ff.text_field :number %>
+          <%= ff.check_box :primary %>
+          <%= ff.label :primary, "優先" %>
+        </li>
+      <% end %>
+    <% end %>
+  </ol>
+</div>
+

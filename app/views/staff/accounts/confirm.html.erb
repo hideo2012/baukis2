@@ -1,14 +1,14 @@
 <% @title = "アカウント情報編集（確認）" %>
 <h1><%= @title %></h1>
 
-<div id="generic-form">
+<div id="generic-form" calss="confirming" >
   <%= form_with model: @staff_member, scope: "form",
     url: :staff_account do |f| %>
-    <%  p = ConfirmPresenter.new( f, self ) %>
+    <%  p = FormPresenter.new( f, self ) %>
 
-    <%= p.text_field_block :email, "メールアドレス" %>
-    <%= p.full_name_block  :family_name, :given_name, "氏名" %>
-    <%= p.full_name_block  :family_name_kana, :given_name_kana, "フリガナ"  %>
+    <%= p.text_field_hidden :email, "メールアドレス"  %>
+    <%= p.full_name_hidden  :family_name, :given_name, "氏名" %>
+    <%= p.full_name_hidden  :family_name_kana, :given_name_kana, "フリガナ"  %>
 
     <div class="buttons">
       <%= f.submit " 更新 " %>

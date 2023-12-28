@@ -8,7 +8,9 @@ Rails.application.routes.draw do
       #post "session" => "sessions#create", as: :session
       #delete "session" => "sessions#destroy"
       resource :session, only: [ :create, :destroy ]
-      resource :account, only: [ :show, :edit, :update ]
+      resource :account, only: [ :show, :edit, :update ] do
+        patch :confirm
+      end
       resource :password, only: [ :show, :edit, :update ]
       resources :customers
       resources :programs do

@@ -1,0 +1,16 @@
+<% @title = " 新規問い合わせ(確認) "  %>
+<h1><%= @title %></h1>
+
+<div id="generic-form" >
+  <%= form_with model: @message, url: :customer_messages do |f| %>
+    <% p = FormPresenter.new( f, self ) %>
+    <div>以下の内容で問い合わせを送信します。よろしいですか？</div>
+    <%= p.text_field_hidden( :subject, " 件名 " ) %>
+    <%= p.text_area_hidden( :body, " 本文 " ) %>
+    <div class="buttons">
+      <%= f.submit " 送信 " %>
+      <%= f.submit " 訂正 ", name: "correct"%>
+      <%= link_to " キャンセル ", :customer_root %>
+    </div>
+  <% end %>
+</div>

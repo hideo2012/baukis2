@@ -1,0 +1,4 @@
+class StaffMessage < Message
+
+
+end

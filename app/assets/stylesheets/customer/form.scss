@@ -49,7 +49,7 @@ div#wrapper {
 					display: inline;
 					padding: 0;
 					label { color: $red; }
-					input { background-color: $pink; }
+					input, textarea { background-color: $pink; }
 					
 				}
 				div.with-errors {

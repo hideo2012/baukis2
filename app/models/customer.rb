@@ -15,7 +15,9 @@ class Customer < ApplicationRecord
     class_name: "Phone", autosave: true
   has_many :entries, dependent: :destroy
   has_many :programs, through: :entries # , source: program (省略可能)
-
+  has_many :messages
+  has_many :outbound_messages, class_name: "CustomerMessage", foreign_key: "customer_id"
+  has_many :inbound_messages, class_name: "StaffMessage", foreign_key: "customer_id"
 
 
   validates :gender, inclusion: { 

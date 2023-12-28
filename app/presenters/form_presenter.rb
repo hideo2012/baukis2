@@ -20,12 +20,18 @@ class FormPresenter
     @view_context = view_context
   end
 
+  def decorated_label( name, label_text, options = {} )
+    label( name, label_text, class: options[:required] ? "required" : nil )
+  end
+
+=begin
   def notes
     markup( :div, class: "notes" ) do |m|
       m.span "*", class: "mark"
       m.text " 印の付いた項目は入力必須です。 "
     end
   end
+=end
 
   def text_field_block( name, label_text, options = {} )
     markup( :div, class: "input-block" ) do |m|
@@ -94,6 +100,7 @@ class FormPresenter
       .map { |m| [ "%02d" % m, m ] } 
   end
 
+=begin
   def description
     markup( :div, class: "input-block" ) do |m|
       m << decorated_label( :description, "詳細", required: true )
@@ -101,7 +108,18 @@ class FormPresenter
       m.span "(800文字以内)", class: "instruction", style: "float: right" 
     end
   end
+=end
 
+  def text_area_block( name, label_text, options = {} )
+    markup( :div, class: "input-block" ) do |m|
+      m << decorated_label( name, label_text, options )
+      m << text_area( name, options )
+      if max = options[:maxlength]
+        m.span "(#{max} 文字以内)", class: "instruction", style: "float: right" 
+      end
+      m << error_messages_for( name )
+    end
+  end
 
   def drop_down_list_block( name, label_text, choices, options = {} )
     markup( :div, class: "input-block" ) do |m|
@@ -198,7 +216,16 @@ class FormPresenter
     end
   end
 
-  def decorated_label( name, label_text, options = {} )
-    label( name, label_text, class: options[:required] ? "required" : nil )
+  def text_area_hidden( name, label_text, options = {} )
+    markup( :div ) do |m|
+      m << decorated_label( name, label_text )
+      value = object.send(name)
+      m.div( class: "field-value" ) do
+        m << ERB::Util.html_escape(value).gsub(/\n/, "<br>")
+      end
+      m << hidden_field( name )
+    end
   end
+
+
 end

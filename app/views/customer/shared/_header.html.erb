@@ -5,12 +5,13 @@
 
   <%=
     if current_customer
-      link_to "ログアウト", :customer_session, method: :delete, 
-        class: "link-login-or-logout"
+      link_to "ログアウト", :customer_session, class: "link-login-or-logout", 
+        method: :delete
     else
       link_to "ログイン", :customer_login, class: "link-login-or-logout"
     end
   %>
 
   <%= link_to "アカウント", :customer_account if current_customer %>
+  <%= link_to "問い合わせ", :new_customer_message if current_customer %>
 </header>

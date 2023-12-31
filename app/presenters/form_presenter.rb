@@ -182,10 +182,19 @@ class FormPresenter
     end
   end
 
+=begin
   def suspended_check_box
     markup(:div, class: "check-boxes") do |m|
       m << check_box(:suspended)
       m << label( :suspended, " アカウント停止 " )
+    end
+  end
+=end
+
+  def check_box_block( name, label_text, options = {} )
+    markup(:div, class: "check-boxes") do |m|
+      m << check_box( name )
+      m << label( name, label_text )
     end
   end
 

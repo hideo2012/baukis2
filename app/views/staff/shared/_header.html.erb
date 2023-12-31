@@ -8,8 +8,12 @@
   <% else %>
       <%= link_to "ログアウト", :staff_session, method: :delete %>
       <%= link_to "アカウント", :staff_account %>
-      <a href="#" >新規問い合わせ
-        <%= CustomerMessage.number_of_unprocessed_message %></a>
+
+      <a href="#">新規問い合わせ
+        <%= tag.span CustomerMessage.number_of_unprocessed_message ,
+          id: "number-of-unprocessed-messages", 
+          data: { path: staff_messages_count_path } %>
+      </a>
   <% end %>
 </header>
 

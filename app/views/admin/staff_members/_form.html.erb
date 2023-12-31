@@ -39,18 +39,6 @@
   <%= f.label :suspended, "アカウント停止" %>
 </div>
 
-<%= p.notes %>
-<%= p.text_field_block( :email, " メールアドレス ", size: 32, required: true ) %>
-<%= p.password_field_block( :password, " パスワード ", size: 32, requied: true ) %>
-<%= p.full_name_block( :family_name, :given_name, " 氏名 ", required: true ) %>
-<%= p.full_name_block( :family_name_kana, :given_name_kana, " フリガナ ", required: true ) %>
-<%= p.date_field_block( :start_date, " 入社日 ", required: true ) %>
-<%= p.date_field_block( :end_date, " 退職日 " ) %>
-<%= p.suspended_check_box %>
-
-<% end %><!--/// replace to presenter end ///-->
-
-
 <%=
   markup do |m|
     #p = StaffMemberFormPresenter.new( f, self ) 
@@ -70,3 +58,18 @@
   end
 %>
 
+<% end %><!--/// replace to presenter end ///-->
+
+<% p = FormPresenter.new( f, self ) %>
+<div class="notes">
+  <span class="mark">*</span>印の付いた項目は入力必須です。
+</div>
+<%= p.text_field_block( :email, " メールアドレス ", size: 32, required: true ) %>
+<% if p.object.new_record? %>
+  <%= p.password_field_block( :password, " パスワード ", size: 32, requied: true ) %>
+<% end %>
+<%= p.full_name_block( :family_name, :given_name, " 氏名 ", required: true ) %>
+<%= p.full_name_block( :family_name_kana, :given_name_kana, " フリガナ ", required: true ) %>
+<%= p.date_field_block( :start_date, " 入社日 ", required: true ) %>
+<%= p.date_field_block( :end_date, " 退職日 " ) %>
+<%= p.check_box_block( :suspended, " アカウント停止 " ) %>

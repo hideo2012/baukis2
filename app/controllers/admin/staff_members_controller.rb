@@ -20,8 +20,6 @@ class Admin::StaffMembersController < Admin::Base
 
   def create
     @staff_member = StaffMember.new( staff_members_params )
-    #logger.debug "=== params === :" +  params.inspect
-    #logger.debug "=== model === :" +  @staff_member.inspect
     if @staff_member.save
       flash.notice = "職員アカウントを新規登録しました。"
       redirect_to :admin_staff_members

@@ -1,0 +1,27 @@
+<% @title =  " メッセージ詳細 " %>
+<h1><%= @title %></h1>
+
+<% m = @message  %>
+
+<div class="table-wrapper">
+
+  <% if @message.kind_of?( CustomerMessage ) %>
+    <div class="links">
+      <%= link_to " 返信する ", new_staff_message_reply_path( @message ) %>
+    </div>
+  <% end %>
+
+  <table class="attributes">
+    <tr><th> 種類 </th><td><%= m.type_memo %></td></tr>
+    <tr><th> 送信者 </th><td><%= m.sender %></td></tr>
+    <tr><th> 受信者 </th><td><%= m.receiver %></td></tr>
+    <tr><th> 件名 </th><td><%= truncate( m.subject, legth: 20 ) %></td></tr>
+    <tr><th> 作成日時 </th><td><%= m.create_datetime %></td></tr>
+  </table>
+
+  <% p = MessagePresenter.new(@message, self) %>
+  <div class="tree"><%= p.tree %></div>
+
+  <div class="body"><%= formated_text( m.body ) %></div>
+</div>
+

@@ -1,0 +1,18 @@
+<% @title = " 問い合わせへの返信 "  %>
+<h1><%= @title %></h1>
+
+<div id="generic-form" class="table-wrapper" >
+  <%= form_with  model: @reply, 
+    url: confirm_staff_message_reply_path( @message )  do |f| %>
+    <% p = FormPresenter.new( f, self ) %>
+    <%= p.text_field_block( :subject, " 件名 ", size: 40, maxlength: 80, required: true ) %>
+    <%= p.text_area_block( :body, " 本文 ", rows: 6, maxlength: 800, style: "width: 454px" , required: true ) %>
+    <div class="buttons">
+      <%= f.submit " 確認画面へ進む "  %>
+      <%= link_to " キャンセル ",  :staff_messages %>
+    </div>
+  <% end %> <%# --- end of form_with --- %>
+
+  <%= render "message", message: @message %>
+</div>
+

@@ -28,4 +28,8 @@ module ApplicationHelper
     number_with_delimiter(_number)
   end
 
+  def formated_text( text )
+    ERB::Util.html_escape( text ).gsub(/\n/, "<br>").html_safe
+  end
+
 end

@@ -8,12 +8,34 @@
   <% else %>
       <%= link_to "ログアウト", :staff_session, method: :delete %>
       <%= link_to "アカウント", :staff_account %>
+      <a href="<%= inbound_staff_messages_path %>">新規問い合わせ
+        <span id="number-of-unprocessed-messages2" 
+              data-path="<%= staff_messages_count_path %>">
+          <%= CustomerMessage.number_of_unprocessed_message  %>
+        </span>
+      </a>
+  <% end %>
+    
+<% if false %>
+      <%= tag.a  "新規問い合わせ", href: inbound_staff_messages_path do |t|
+            t.span CustomerMessage.number_of_unprocessed_message ,
+              id: "number-of-unprocessed-messages", 
+              data: { path: staff_messages_count_path }
+      end %>
 
       <a href="#">新規問い合わせ
         <%= tag.span CustomerMessage.number_of_unprocessed_message ,
           id: "number-of-unprocessed-messages", 
           data: { path: staff_messages_count_path } %>
       </a>
-  <% end %>
+
+      <a href="<%= inbound_staff_messages_path %>">新規問い合わせ
+        <span id="number-of-unprocessed-messages2" 
+              data-path="<%= staff_messages_count_path %>">
+          <%= CustomerMessage.number_of_unprocessed_message  %>
+        </span>
+      </a>
+<% end %>
+
 </header>
 

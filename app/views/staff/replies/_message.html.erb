@@ -1,0 +1,6 @@
+  <table class="attributes">
+    <tr><th> 送信者 </th><td><%= message.sender %></td></tr>
+    <tr><th> 件名 </th><td><%= message.subject %></td></tr>
+    <tr><th> 作成日時 </th><td><%= message.create_datetime %></td></tr>
+  </table>
+  <div class="body"><%= formated_text( message.body ) %></div>

@@ -5,6 +5,7 @@ table_names = %w(
  customers
  programs
  entries
+ messages
 )
 
 table_names.each do |table_name| 

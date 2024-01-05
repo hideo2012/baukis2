@@ -17,7 +17,42 @@
     <tr><th> 受信者 </th><td><%= m.receiver %></td></tr>
     <tr><th> 件名 </th><td><%= truncate( m.subject, legth: 20 ) %></td></tr>
     <tr><th> 作成日時 </th><td><%= m.create_datetime %></td></tr>
+    <%# --- with app/javascript/staff/tags.js  --- %>
+    <tr>
+      <th> タグ </th>
+      <td>
+        <div>
+            <input type="text" size="10" class="tag-input-text" />
+            <button class="tag-input" >追加</button>
+        </div>
+        <ul id="tag-root">
+          <% @message.tags.each do |tag| %>
+            <li>
+              <span><%= tag.value %></span>
+              <button class="tag-delete" >X</button>
+            </li>
+          <% end %>
+          <li>
+            <span>Testtag</span>
+            <button class="tag-delete" >X</button>
+          </li>
+
+        </ul>
+      </td>
+    </tr>
   </table>
+
+  <div id='template' style='display:none;'>
+    <li>
+      <span>DUMMY</span>
+      <button class="tag-delete" >X</button>
+    </li>
+  </div>
+  <div id="tag-ajax" style='display:none;' 
+       data-message-id="<%= @message.id %>" 
+       data-path="<%= staff_tag_message_path( id: @message.id ) %>" >
+       <%# --- config/routes staff: POST "messages/:id/tag" ... as: tag_message --- %>
+  </div>
 
   <% p = MessagePresenter.new(@message, self) %>
   <div class="tree"><%= p.tree %></div>

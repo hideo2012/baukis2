@@ -8,4 +8,18 @@ class Staff::AjaxController < Staff::Base
     #render plain: "100"
   end
 
+  # POST
+  def add_tag
+    message = Message.find( params[:id] )
+    message.add_tag( params[:label] )
+    render plain: "ok"
+  end
+
+  # DELETE
+  def remove_tag
+    message = Message.find( params[:id] )
+    message.remove_tag( params[:label] )
+    render plain: "ok"
+  end
+
 end

@@ -19,6 +19,8 @@ Rails.application.routes.draw do
         end
       end
       get "messages/count" => "ajax#message_count"
+      post "messages/:id/tag" => "ajax#add_tag", as: :tag_message  #TODO 
+      delete "messages/:id/tag" => "ajax#remove_tag"
       resources :messages, only: [ :index, :show, :destroy ] do
         get :inbound, :outbound, :deleted, on: :collection
         resource :reply, only: [ :new, :create ] do

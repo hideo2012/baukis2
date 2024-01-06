@@ -14,26 +14,36 @@ $(document).on("turbolinks:load", () => {
 
 	$(".tag-input").click( function() {
 		var input_text = $.trim( $(input_target).val() )
+
 		if ( !input_text.length ) return
-		// TODO 追加前表示に同じものあるかチェックしろ。(サーバ上は無視されOK)
-		$.post( path, { label: input_text }, (data) => {
-			if ( data !== 'ok' ) {
-				console.log( '== ng ==' + data )
-				return
-			}
+		var labels = $(parent_tag + ' span').map( function(i, elem) {
+			return $(elem).text()
+		}).get()
+		if ( labels.includes( input_text ) ) {
+			$( input_target ).val('')
+			return
+		}
+
+		$.post( path, { label: input_text }, function(msg) {
+			if ( msg !== 'ok' ) return
 			$( template ).clone(true)
 				.appendTo( parent_tag )
 				.children('span').text( input_text )
 			$( input_target ).val('')
 		})
-	});
+	}); // end of click
 
 	$(".tag-delete").click( function() {
-		$(this).parent().remove()
-
-	});
+		let target = $(this).parent()
+		let target_label = target.children('span').text()
+		$.ajax({
+			type: "DELETE", url: path, data: { label: target_label }
+		}).done( function(msg) {
+			if ( msg !== 'ok' ) return
+			target.remove()
+		}) 
+	}); // end of click
 })
-
 
 // for  app/view/staff/messages/show.html.erb
 

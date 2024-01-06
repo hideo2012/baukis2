@@ -20,7 +20,14 @@ class Message < ApplicationRecord
   scope :not_deleted, -> { where( deleted: false ) }
   scope :deleted, -> { where( deleted: true ) }
   scope :sorted, -> { order( created_at: :desc ) }
-
+  scope :tagged_as, -> ( tag_id ) do
+    if tag_id
+      joins(:msg_tag_links)
+        .where( "msg_tag_links.tag_id" => tag_id )
+    else
+      self
+    end
+  end
 
   def add_tag( label )
     self.class.transaction do

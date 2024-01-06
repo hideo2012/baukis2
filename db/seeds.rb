@@ -6,6 +6,7 @@ table_names = %w(
  programs
  entries
  messages
+ tags
 )
 
 table_names.each do |table_name| 

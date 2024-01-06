@@ -4,12 +4,7 @@
 <% m = @message  %>
 
 <div class="table-wrapper">
-
-  <% if @message.kind_of?( CustomerMessage ) %>
-    <div class="links">
-      <%= link_to " 返信する ", new_staff_message_reply_path( @message ) %>
-    </div>
-  <% end %>
+  <%= render "links" %>
 
   <table class="attributes">
     <tr><th> 種類 </th><td><%= m.type_memo %></td></tr>
@@ -32,11 +27,6 @@
               <button class="tag-delete" >X</button>
             </li>
           <% end %>
-          <li>
-            <span>Testtag</span>
-            <button class="tag-delete" >X</button>
-          </li>
-
         </ul>
       </td>
     </tr>
@@ -56,7 +46,6 @@
 
   <% p = MessagePresenter.new(@message, self) %>
   <div class="tree"><%= p.tree %></div>
-
   <div class="body"><%= formated_text( m.body ) %></div>
 </div>
 

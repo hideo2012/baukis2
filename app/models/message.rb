@@ -31,6 +31,7 @@ class Message < ApplicationRecord
 
   def add_tag( label )
     self.class.transaction do
+      HashLock.acquire( "tags", "value", label )
       tag = Tag.find_by( value: label ) 
       tag ||= Tag.create!( value: label ) 
       unless msg_tag_links.where( tag_id: tag.id ).exists?
@@ -41,6 +42,7 @@ class Message < ApplicationRecord
 
   def remove_tag( label )
     self.class.transaction do
+      HashLock.acquire( "tags", "value", label )
       if tag = Tag.find_by( value: label ) 
         msg_tag_links.find_by( tag_id: tag.id ).destroy
         tag.destroy if tag.msg_tag_links.empty?

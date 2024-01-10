@@ -1,4 +1,16 @@
 class Customer::MessagesController < Customer::Base
+  before_action :customer_check
+
+  def index
+    @messages = StaffMessage.not_deleted.where( customer: current_customer )
+      #.sorted
+      #.page( params[:page] )
+  end
+
+  def show
+    @message = Message.find( params[:id ] )
+  end
+  
   def new
     @message = CustomerMessage.new
   end
@@ -28,6 +40,14 @@ class Customer::MessagesController < Customer::Base
       render action: "new"
     end
   end
+
+  def destroy
+    message = StaffMessage.find( params[:id ] )
+    message.update_column( :deleted, true )
+    flash.notice = "メッセージを削除しました。 "
+    redirect_to :customer_messages
+  end
+
 
   private def strong_params
     params.require(:customer_message).permit(:subject, :body)

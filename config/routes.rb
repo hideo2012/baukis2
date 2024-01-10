@@ -66,10 +66,12 @@ Rails.application.routes.draw do
           patch :cancel
         end
       end
-      resources :messages, only: [ :new, :create ] do
+      resources :messages, only: [ :index, :show, :new, :create, :destroy ] do
+        post :confirm, on: :collection # mypage/messages/confirm
         #post :confirm # これだと, mypage/messages/:messages_id/confirm となりidが必要になる
-        # 以下では、mypage/messages/confirm
-        post :confirm, on: :collection
+        resource :reply, only: [ :new, :create ] do
+          post :confirm
+        end
       end
     end
   end

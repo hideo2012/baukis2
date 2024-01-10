@@ -1,0 +1,22 @@
+<% @title = " メッセージへの回答(確認) "  %>
+<h1><%= @title %></h1>
+
+<div id="generic-form" class="table-wrapper" >
+  <%= form_with  model: @reply, 
+    url: customer_message_reply_path( @staff_message )  do |f| %>
+
+    <div>以下の内容で回答します。よろしいですか？</div>
+    <% p = FormPresenter.new( f, self ) %>
+    <%= p.text_field_hidden( :subject, " 件名 " ) %>
+    <%= p.text_area_hidden( :body, " 本文 " ) %>
+
+    <div class="buttons">
+      <%= f.submit " 送信 "  %>
+      <%= f.submit " 訂正 ", name: "correct" %>
+      <%= link_to " キャンセル ",  :customer_messages %>
+    </div>
+  <% end %> <%# --- end of form_with --- %>
+
+  <%= render "staff_message", message: @staff_message %>
+</div>
+

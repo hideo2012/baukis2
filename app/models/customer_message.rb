@@ -7,7 +7,7 @@ class CustomerMessage < Message
   end
 
   def type_memo
-    "  問い合わせ "
+    " 問い合わせ "
   end
 
   def sender

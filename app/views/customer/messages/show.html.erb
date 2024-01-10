@@ -1,0 +1,18 @@
+<% @title =  " メッセージ詳細 " %>
+<h1><%= @title %></h1>
+
+<% m = @message  %>
+
+<div class="table-wrapper">
+  <div class="links">
+    <%= link_to " 回答する ", new_customer_message_reply_path( @message ) %>
+  </div>
+
+  <table class="attributes">
+    <tr><th> 送信者 </th><td><%= m.sender %></td></tr>
+    <tr><th> 件名 </th><td><%= truncate( m.subject, legth: 20 ) %></td></tr>
+    <tr><th> 作成日時 </th><td><%= m.create_datetime %></td></tr>
+  </table>
+  <div class="body"><%= formated_text( m.body ) %></div>
+</div>
+

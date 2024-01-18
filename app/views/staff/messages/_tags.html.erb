@@ -3,10 +3,14 @@
   <% Tag.all.each do |tag| %>
     <% if tag.id === params[:tag_id].to_i %>
       <span class="current_tag"><%= tag.value %></span>
+
     <% elsif params[:action] == "index" %>
-      <%= link_to tag.value, [ :staff, tag, :messages ] %>
+      <%# link_to tag.value, [ :staff, tag, :messages ] %>
+      <%= link_to tag.value, staff_messages_path( tag_id: tag.id ) %>
+
     <% else %>
-      <%= link_to tag.value, [ params[:action].to_sym, :staff, tag, :messages ] %>
+      <%# link_to tag.value, [ params[:action].to_sym, :staff, tag, :messages ] %>
+      <%= link_to tag.value, [ params[:action].to_sym, :staff, :messages, { tag_id: tag.id } ] %>
     <% end %>
   <% end %>
 </div>

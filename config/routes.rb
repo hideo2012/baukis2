@@ -28,11 +28,13 @@ Rails.application.routes.draw do
         end
       end
       # controller = message_controller  why?
+=begin
       resources :tags, only: [] do
         resources :messages, only: [ :index ] do
           get :inbound, :outbound, :deleted, on: :collection
         end
       end
+=end
     end
   end
   

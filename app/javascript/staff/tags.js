@@ -1,4 +1,4 @@
-require("jquery-ui")
+//require("jquery-ui")
 //require("tag-it")
 
 const parent_tag = 'ul#tag-root'

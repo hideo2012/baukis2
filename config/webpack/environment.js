@@ -10,10 +10,10 @@ environment.plugins.prepend("Provide",
 	})
 )
 
-const aliasConfig = {
-	"jquery":    "jquery-ui-dist/external/jquery/jquery.js",
-	"jquery-ui": "jquery-ui-dist/jquery-ui.js",
-};
+//const aliasConfig = {
+//	"jquery":    "jquery-ui-dist/external/jquery/jquery.js",
+//	"jquery-ui": "jquery-ui-dist/jquery-ui.js",
+//};
 //environment.config.set( "resolve.alias", aliasConfig );
 
 module.exports = environment

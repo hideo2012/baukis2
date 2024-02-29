@@ -34,7 +34,6 @@ Rails.application.routes.draw do
           get :inbound, :outbound, :deleted, on: :collection
         end
       end
-      test for new token 20240222  nikkei  ath !!!
 =end
     end
   end

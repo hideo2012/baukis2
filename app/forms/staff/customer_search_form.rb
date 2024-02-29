@@ -9,77 +9,38 @@ class Staff::CustomerSearchForm
 
   def search
     normalize_values
-    rel = Customer
+    @rel = Customer
+    condition( :customers, :family_name_kana )
+    condition( :customers, :given_name_kana )
+    condition( :customers, :birth_year )
+    condition( :customers, :birth_month )
+    condition( :customers, :birth_mday )
+    condition( :customers, :gender )
 
-    if family_name_kana.present?
-      rel = rel.where( family_name_kana: family_name_kana )
-    end
-    if given_name_kana.present?
-      rel = rel.where( given_name_kana: given_name_kana )
-    end
-    rel = rel.where( birth_year: birth_year )   if birth_year.present?
-    rel = rel.where( birth_month: birth_month ) if birth_month.present?
-    rel = rel.where( birth_mday: birth_mday )   if birth_mday.present?
-
-    if prefecture.present? || city.present? || postal_code.present?
-      rel = address_condition( rel)
+    if address_type.present?
+      @rel = @rel.joins( "#{address_type}_address".to_sym )
+    else
+      @rel = @rel.joins( :addresses )
     end
 
-=begin
-    if prefecture.present? || city.present?
-      case adress_type
-      when "home"
-        rel = rel.join(:home_address)
-      when "work"
-        rel = rel.join(:work_address)
-      when ""
-        rel = rel.join(:address)
-      else
-        raise
-      end
-      if prefecture.present?
-        rel = rel.where( "address.prefecture" => prefecture )
-      end
-      rel = rel.where( "address.city" => city ) if city.present?
-    end
-=end
+    condition( :addresses, :prefecture )
+    condition( :addresses, :city )
+    condition( :addresses, :postal_code )
 
     if phone_number.present?
-      rel = rel.joins( :phones ).where(
+      @rel = @rel.joins( :phones ).where(
         "phones.number_for_index" => phone_number)
     end
 
-    rel = rel.where( gender: gender ) if gender.present?
-
-
-    rel = rel.distinct
-    rel.order( :family_name_kana, :given_name_kana )
+    @rel = @rel.distinct
+    @rel.order( :family_name_kana, :given_name_kana )
   end
 
-  private def address_condition( rel )
-    table = "addresses"
-    case address_type
-    when "home"
-      rel = rel.joins(:home_address)
-    when "work"
-      rel = rel.joins(:work_address)
-    when ""
-      rel = rel.joins(table.to_sym)
-    else
-      raise
-    end
-
-    if prefecture.present?
-      rel = rel.where( table + ".prefecture"  => prefecture )
-    end
-    if city.present?
-      rel = rel.where( table + ".city" => city ) 
-    end
-    if postal_code.present?
-      rel = rel.where( table + ".postal_code" => postal_code )
-    end
-
-    rel
+  private def condition( table_name, field_name )
+    val = eval(field_name.to_s) 
+    return if val.blank?
+    field = "#{table_name.to_s}.#{field_name.to_s}"
+    @rel = @rel.where( field => val )
   end
 
   private def normalize_values

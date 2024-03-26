@@ -1,9 +1,7 @@
 class Staff::Base < ApplicationController
   before_action :check_source_ip_address
-  #before_action :staff_member_check
   
   helper_method :current_staff_member
-
   private def current_staff_member
     if session[:staff_member_id]
       @current_staff_member ||=
@@ -11,6 +9,7 @@ class Staff::Base < ApplicationController
     end
   end
 
+  # ログイン済前提のアクション実行時呼び出す
   def staff_member_check
     return unless authorize 
     return unless check_account 
@@ -18,59 +17,66 @@ class Staff::Base < ApplicationController
   end
 
   private def check_source_ip_address
-    return true if AllowedSource.include?("staff", request.ip)
-    session_delete
-    if ajax? 
-      render plain: "Forbidden", status: 403
+    if AllowedSource.include?("staff", request.ip)
+      return true 
     else
+      session_delete
+      return false if ajax? 
       raise IpAddressRejected
+      return false #TODO 無効？
     end
-    return false
   end
 
   private def authorize
-    return true if current_staff_member
-    if ajax? 
-      render plain: "Forbidden", status: 403
+    if current_staff_member
+      return true
     else
+      return false if ajax?
       flash.alert = "職員としてログインしてください。"
       redirect_to :staff_login
+      return false
     end
-    return false
   end
 
+  # ログイン中職員が有効か確認（戻り値：処理中断判定 ） 
   private def check_account
-    return true if current_staff_member && current_staff_member.active?
-    session_delete
-    if ajax? 
-      render plain: "Forbidden", status: 403
+    if current_staff_member && 
+        current_staff_member.active? 
+      return true
     else
+      session_delete
+      return false if ajax?
       flash.alert = " アカウントが無効になりました。"
       redirect_to :staff_root
+      return false
     end
-    return false
   end
 
   TIMEOUT = 60.minutes
 
   private def check_timeout
-    return true unless ( current_staff_member && session[:last_access_time] )
+    unless current_staff_member && session[:last_access_time]
+      return true # ログイン状態はチェック不要（実際はあり得ない？）
+    end
     if session[:last_access_time] >= TIMEOUT.ago
       session[:last_access_time] = Time.current
       return true
-    end
-    session_delete
-    if ajax?
-      render plain: "Forbidden", status: 403
     else
+      session_delete
+      return false if ajax?
       flash.alert = "セッションがタイムアウトしました。"
       redirect_to :staff_login
+      return false
     end
-    return false
   end
 
   private def ajax?
-    controller_name == "ajax" ? true : false
+    if controller_name == "ajax" 
+      render plain: "Forbidden", status: 403
+      return true
+    else
+      return false
+    end
   end
 
   private def session_delete

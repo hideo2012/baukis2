@@ -1,6 +1,4 @@
 class Staff::AccountsController < Staff::Base
-  before_action :staff_member_check
-
   def show
     @staff_member = current_staff_member
   end

@@ -1,5 +1,4 @@
 class Staff::MessagesController < Staff::Base
-  before_action :staff_member_check
 
   def index
     @messages = Message.not_deleted.sorted.page( params[:page] )

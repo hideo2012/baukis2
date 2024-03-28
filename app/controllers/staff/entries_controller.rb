@@ -1,5 +1,4 @@
 class Staff::EntriesController < Staff::Base
-  before_action :staff_member_check
 
   def update_all
     #p = Program.find( params[:program_id] )

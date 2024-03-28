@@ -1,5 +1,4 @@
 class Staff::RepliesController < Staff::Base
-  before_action :staff_member_check
   before_action :prepare_message
 
   def new

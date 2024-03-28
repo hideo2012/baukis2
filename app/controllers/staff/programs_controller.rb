@@ -1,5 +1,4 @@
 class Staff::ProgramsController < Staff::Base
-  before_action :staff_member_check
 
   def index
     @programs = Program.listing.page( params[:page] )

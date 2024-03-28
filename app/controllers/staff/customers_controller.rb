@@ -1,5 +1,4 @@
 class Staff::CustomersController < Staff::Base
-  before_action :staff_member_check
 
   def index
     @search_form = Staff::CustomerSearchForm.new( search_strong_params )

@@ -1,5 +1,4 @@
 class Staff::PasswordsController < Staff::Base
-  before_action :staff_member_check
 
   def show
     redirect_to :edit_staff_password

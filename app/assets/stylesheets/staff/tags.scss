@@ -1,0 +1,16 @@
+@import "colors";
+@import "dimensions";
+
+.tag-list {
+	display: flex;
+	list-style: none;
+
+	li {
+		padding: 0px 10px;
+		span { 
+			padding: 3px 10px;
+			color: white;
+			background-color: gray; 
+		}
+	}
+}

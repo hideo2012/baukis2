@@ -1,34 +1,12 @@
 class AllowedSource < ApplicationRecord
-  attr_accessor :_destoy
+  attr_accessor :_destoy #TODO what?
   attr_reader :last_octet
 
   def last_octet=(_last_octet)
     # 永久ループ！(ctrlz)  self.last_octet = _last_octet.strip
     @last_octet = _last_octet.strip
     self.octet4 = wildcard_or_last( last_octet )
-=begin
-    if last_octet == "*"
-      self.octet4 = 0
-      self.wildcard = true
-    else
-      self.octet4 = last_octet
-    end
-=end
   end
-
-=begin
-  before_validation do
-    if last_octet
-      self.last_octet.strip!
-      if last_octet == "*"
-        self.octet4 = 0
-        self.wildcard = true
-      else
-        self.octet4 = last_octet
-      end
-    end
-  end
-=end
 
   validates :octet1, :octet2, :octet3, :octet4, presence: true,
     numericality: { only_integer: true, allow_blank: true },
@@ -55,33 +33,24 @@ class AllowedSource < ApplicationRecord
     self.octet2 = octets[1]
     self.octet3 = octets[2]
     self.octet4 = wildcard_or_last( octets[3] )
-
-=begin
-    if octets[3] == "*"
-      self.octet4 = 0
-      self.wildcard = true
-    else
-      self.octet4 = octets[3]
-    end
-=end
   end
 
   private def wildcard_or_last( _last_octet )
-    return _last_octet  unless _last_octet == "*"
-    self.wildcard = true
-    0
+    if _last_octet == "*"
+      self.wildcard = true
+      return 0
+    else
+      return _last_octet
+    end
   end
-
-
 
   def ip_address
     [ octet1, octet2, octet3, wildcard? ? "*" : octet4 ].join(".")
   end
 
-
   class << self
     def include?( _namespace, _ip_address )
-      p ">> restrict config :#{Rails.application.config.baukis2[:restrict_ip_address]}"
+      #p ">> restrict config :#{Rails.application.config.baukis2[:restrict_ip_address]}"
 
       if Rails.application.config.baukis2[:restrict_ip_address] == false
         return true # any ip OK ( 0.0.0.0 )
@@ -100,5 +69,4 @@ class AllowedSource < ApplicationRecord
       where( namespace: _namespace).where(opts).exists?
     end
   end
-
 end

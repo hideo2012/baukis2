@@ -20,12 +20,12 @@
             <input type="text" size="10" class="tag-input-text" />
             <button class="tag-input" >追加</button>
         </div>
-        <ul id="tag-root">
+        <ul id="tag-root" class="tag-list">
           <% @message.tags.each do |tag| %>
             <li>
-              <span><%= tag.value %></span>
-              <button class="tag-delete" >X</button>
-            </li>
+              <span><%= tag.value %></span><br/>
+              <button class="tag-delete" > 削除 </button> 
+            </li>  
           <% end %>
         </ul>
       </td>
@@ -34,8 +34,8 @@
 
   <div id='template' style='display:none;'>
     <li>
-      <span>DUMMY</span>
-      <button class="tag-delete" >X</button>
+      <span>DUMMY</span><br/>
+      <button class="tag-delete" > 削除 </button> 
     </li>
   </div>
   <div id="tag-ajax" style='display:none;' 
